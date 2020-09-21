@@ -1,0 +1,4 @@
+var Universe = {
+  init: function() {
+  }
+};
