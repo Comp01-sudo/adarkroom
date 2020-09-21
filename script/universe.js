@@ -46,21 +46,6 @@ var Universe = {
 				};
 			},
 		},
-		'lodge': {
-			name: _('lodge'),
-			button: null,
-			maximum: 1,
-			availableMsg: _('villagers could help hunt, given the means'),
-			buildMsg: _('the hunting lodge stands in the forest, a ways out of town'),
-			type: 'building',
-			cost: function () {
-				return {
-					wood: 200,
-					fur: 10,
-					meat: 5
-				};
-			},
-		},
 		'ambassador': {
 			name: _('ambassador'),
 			button: null,
@@ -253,7 +238,7 @@ var Universe = {
 		}
         },
                 
-	name: _("Room"),
+	name: _("Universe"),
 	init: function (options) {
 		this.options = $.extend(
 			this.options,
@@ -277,7 +262,7 @@ var Universe = {
 		// If this is the first time playing, the fire is dead and it's freezing. 
 		// Otherwise grab past save state temp and fire level.
 		$SM.set('game.temperature', $SM.get('game.temperature.value') === undefined ? this.TempEnum.fine : $SM.get('game.temperature'));
-		$SM.set('game.fire', $SM.get('game.fire.value') === undefined ? this.FireEnum.Dead : $SM.get('game.fire'));
+		$SM.set('game.fire', $SM.get('game.fire.value') === undefined ? this.FireEnum.fine : $SM.get('game.fire'));
 
 		// Create the room tab
 		this.tab = Header.addLocation(_("Center"), "", Universe);
@@ -488,51 +473,18 @@ var Universe = {
 		var old = $SM.get('game.temperature.value');
 		if ($SM.get('game.temperature.value') > 0 && $SM.get('game.temperature.value') > $SM.get('game.fire.value')) {
 			$SM.set('game.temperature', Room.TempEnum.fromInt($SM.get('game.temperature.value') - 1));
-			Notifications.notify(Room, _("the room is {0}", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text), true);
+			Notifications.notify(Room, _("The ship is {0}", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text), true);
 		}
 		if ($SM.get('game.temperature.value') < 4 && $SM.get('game.temperature.value') < $SM.get('game.fire.value')) {
 			$SM.set('game.temperature', Room.TempEnum.fromInt($SM.get('game.temperature.value') + 1));
-			Notifications.notify(Room, _("the room is {0}", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text), true);
+			Notifications.notify(Room, _("the ship is {0}", Room.TempEnum.fromInt($SM.get('game.temperature.value')).text), true);
 		}
 		if ($SM.get('game.temperature.value') != old) {
 			Room.changed = true;
 		}
 		Room._tempTimer = Engine.setTimeout(Room.adjustTemp, Room._ROOM_WARM_DELAY);
 	},
-
-	unlockForest: function () {
-		$SM.set('stores.wood', 4);
-		Outside.init();
-		Notifications.notify(Room, _("the wind howls outside"));
-		Notifications.notify(Room, _("the wood is running out"));
-		Engine.event('progress', 'outside');
-	},
-
 	updateBuilderState: function () {
-		var lBuilder = $SM.get('game.builder.level');
-		if (lBuilder === 0) {
-			Notifications.notify(Room, _("a ragged stranger stumbles through the door and collapses in the corner"));
-			lBuilder = $SM.setget('game.builder.level', 1);
-			Engine.setTimeout(Room.unlockForest, Room._NEED_WOOD_DELAY);
-		}
-		else if (lBuilder < 3 && $SM.get('game.temperature.value') >= Room.TempEnum.Warm.value) {
-			var msg = "";
-			switch (lBuilder) {
-				case 1:
-					msg = _("the stranger shivers, and mumbles quietly. her words are unintelligible.");
-					break;
-				case 2:
-					msg = _("the stranger in the corner stops shivering. her breathing calms.");
-					break;
-			}
-			Notifications.notify(Room, msg);
-			if (lBuilder < 3) {
-				lBuilder = $SM.setget('game.builder.level', lBuilder + 1);
-			}
-		}
-		if (lBuilder < 3) {
-			Engine.setTimeout(Room.updateBuilderState, Room._BUILDER_STATE_DELAY);
-		}
 		Engine.saveGame();
 	},
 
