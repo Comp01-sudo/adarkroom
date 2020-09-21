@@ -402,6 +402,28 @@
 
 		confirmDelete: function() {
 			Events.startEvent({
+				title: _('Continue?'),
+				scenes: {
+					start: {
+						text: [_('Continue to the Universe?')],
+						buttons: {
+							'yes': {
+								text: _('yes'),
+								nextScene: 'end',
+								onChoose: Universe.init();
+							},
+							'no': {
+								text: _('no'),
+								onChoose: Engine.Deletion();
+							}
+						}
+					}
+				}
+			});
+		},
+		
+		Deletion: function() {
+			Events.startEvent({
 				title: _('Restart?'),
 				scenes: {
 					start: {
@@ -421,7 +443,7 @@
 				}
 			});
 		},
-
+		
 		deleteSave: function(noReload) {
 			if(typeof Storage != 'undefined' && localStorage) {
 				var prestige = Prestige.get();
