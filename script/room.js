@@ -149,6 +149,20 @@ var Room = {
 			},
 			audio: AudioLibrary.BUILD_STEELWORKS
 		},
+		'glassworks': {
+			name: _('glasswerks'),
+			button: null,
+			maximum: 1,
+			availibleMsg: ("'glass will probably help out later.' says builder."),
+			buildMsg: _("The glass starts being produced, as see-through as air."),
+			type: 'building',
+			cost: function() {
+				return {
+					'wood': 2000,
+					'coal': 500
+				};
+			},
+		},
 		'armoury': {
 			name: _('armoury'),
 			button: null,
