@@ -353,7 +353,22 @@ var Room = {
 				};
 			},
 			audio: AudioLibrary.CRAFT_RIFLE
-		}
+		},
+		'alloyed sword': {
+			name: _('alloyed sword'),
+			button: null,
+			type: 'weapon',
+			buildMsg: _("The blade hums with power as you pick up the funushed masterpiece."),
+			cost: function () {
+				return {
+					'alien alloy': 200,
+					'energy cell': 100,
+					'steel': 50,
+					'steel sword': 1
+				};
+			},
+			audio: AudioLibrary.CRAFT_STEEL_SWORD
+		},
 	},
 
 	TradeGoods: {
